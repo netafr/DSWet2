@@ -2,32 +2,39 @@
 #define _HASH_
 
 #include "Splay.h"
+#include "Wrapper.h"
 
 const int FACTOR = 2;
 
 
 template <class T>
+class HashTableN;
+
+template <class T>
 class InsertToNew {
-	SplayTree<T>*** insertTo; //Pointer to Array of pointers to trees
+	HashTableN<T>* insertTo; //Pointer to Array of pointers to trees
 	public:
-		InsertToNew(SplayTree<T>*** insertTo): insertTo(insertTo) {}
-		void operator() (T& treeNode) {
-			table->HashInsert(treeNode);
+		InsertToNew(HashTableN<T>* insertTo): insertTo(insertTo) {}
+		void operator() (Wrapper<T>& treeNode) {
+			insertTo->Insert(treeNode.GetData(), treeNode.GetKey());
 		}
 };
 
 
 template <class T>
-class HashTable
+class HashTableN
 {
 	int maxSize;
 	int currSize;
-	SplayTree<T>** table; //Array of pointers to trees
+	SplayTree< Wrapper<T> >** table; //Array of pointers to trees
 
+	 /* Description: Resizes (makes it bigger) the table size.
+	 * Input: None
+	 */
 	void Resize() {
 		maxSize *= FACTOR;
-		SplayTree<T>** oldTable = table; //Save old for copying
-		table = new T*[maxSize]; //Allocate new bigger array
+		SplayTree< Wrapper<T> >** oldTable = table; //Save old for copying
+		table = new SplayTree< Wrapper<T> >*[maxSize]; //Allocate new bigger array
 		for (int i = 0; i < maxSize; ++i)
 		{
 			table[i] = NULL; //Zero it out
@@ -36,11 +43,15 @@ class HashTable
 		currSize = 0;
 		for (int j = 0; j < oldSize; ++j) { //Copy existing data
 			if (oldTable[j]) {
-				SplayTree<T>* tree = oldTable[j];
-				InsertToNew insertToNew(&table);
-				tree->GenericInorder(insertToNew); //Go over the tree and insert the old values into the new table
-				delete tree;
+				InsertToNew<T> insertToNew(this);
+				oldTable[j]->GenericInorder(insertToNew); //Go over the tree and insert the old values into the new table
+				//delete tree;
 			}
+		}
+		for (int k = 0; k < currSize; ++k)
+		{
+			if (oldTable[k])
+				delete oldTable[k];
 		}
 		delete[] oldTable;
 	}
@@ -50,8 +61,8 @@ public:
 	/* Description:  Empty cto'r.
 	* Input:         n, initial size.
 	*/
-	HashTable(int n): maxSize(n), currSize() {
-		table = new SplayTree<T>*[maxSize];
+	HashTableN(int n): maxSize(n), currSize() {
+		table = new SplayTree< Wrapper<T> >*[maxSize];
 		for (int i = 0; i < maxSize; ++i)
 		{
 			table[i] = NULL;
@@ -69,8 +80,7 @@ public:
 		if (table[hash] == NULL) {
 			return false;
 		}
-		SplayTree<T>* treeToSearch = table[hash];
-		if (!treeToSearch->Find(toFind)) {
+		if (!table[hash]->Find(Wrapper<T>(toFind,key))) {
 			return false;
 		}
 		return true;
@@ -88,13 +98,11 @@ public:
 		}
 		int hash = key % maxSize;
 		if (table[hash] == NULL) {
-			table[hash] = new SplayTree<T>*();
-			SplayTree<T>* tree = table[hash];
-			tree->Insert(toInsert);
+			table[hash] = new SplayTree< Wrapper<T> >();
+			table[hash]->Insert(Wrapper<T>(toInsert, key));
 		}
 		else {
-			SplayTree<T>* tree = table[hash];
-			tree->Insert(toInsert);
+			table[hash]->Insert(Wrapper<T>(toInsert, key));
 		}
 		currSize++;
 		if (currSize >= maxSize) {
@@ -103,8 +111,15 @@ public:
 		return true;
 	}
 
-
-	~HashTable() {
+	/* Description:   Dto'r.
+	*/
+	~HashTableN() {
+		for (int i = 0; i < maxSize; ++i)
+		{
+			if(table[i])
+				delete table[i];
+		}
+		delete[] table;
 	}
 };
 #endif
