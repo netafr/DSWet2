@@ -17,10 +17,10 @@ class Colosseum
 {
 	SplayTree<int>* gladsTree;
 	HashTableN<GladGroup>*  groupsTable;
-	Heap activeGroups;
+	Heap* activeGroups;
 public:
 
-	Colosseum();
+	Colosseum(int n, int* trainingGroupsIds);
 
 	StatusType addTrainingGroup(int trainingGroupId);
 
