@@ -3,7 +3,6 @@
 
 #include "Splay.h"
 
-const int DEFAULT_SIZE = 128;
 const int FACTOR = 2;
 
 
@@ -49,9 +48,9 @@ class HashTable
 public:
 
 	/* Description:  Empty cto'r.
-	* Input:         None.
+	* Input:         n, initial size.
 	*/
-	HashTable(): maxSize(DEFAULT_SIZE), currSize() {
+	HashTable(int n): maxSize(n), currSize() {
 		table = new SplayTree<T>*[maxSize];
 		for (int i = 0; i < maxSize; ++i)
 		{
@@ -77,13 +76,34 @@ public:
 		return true;
 	}
 
-	void Insert(const T& toInsert, int key) {
+	/* Description:  Inserts new element with the given data and key.
+	* Input:         toInsert, reference to T data.
+					 key, the key of toInsert.
+	* Output:        None.
+	* Return Values: Bool, if the insertion was successful.
+	*/
+	bool Insert(const T& toInsert, int key) {
+		if (Member(toInsert, key)) {
+			return false;
+		}
 		int hash = key % maxSize;
 		if (table[hash] == NULL) {
 			table[hash] = new SplayTree<T>*();
-			table[hash].
+			SplayTree<T>* tree = table[hash];
+			tree->Insert(toInsert);
 		}
+		else {
+			SplayTree<T>* tree = table[hash];
+			tree->Insert(toInsert);
+		}
+		currSize++;
+		if (currSize >= maxSize) {
+			Resize();
+		}
+		return true;
 	}
+
+
 	~HashTable() {
 	}
 };
