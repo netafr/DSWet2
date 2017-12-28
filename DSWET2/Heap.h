@@ -12,14 +12,14 @@ class Heap{
     Wrapper<int>** arr;
     int size;
     int max_size;
-    void swap(int i, int j) {
-        if (i < 0 || i >= size || j < 0 || j >= size) return;
-        Wrapper<int>* temp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp;
-        (arr[i])->SetData(j);
-        (arr[j])->SetData(i);
-    }
+	void swap(int i, int j) {
+		if (i < 0 || i >= size || j < 0 || j >= size) return;
+		Wrapper<int>* temp = arr[i];
+		arr[i] = arr[j];
+		arr[j] = temp;
+		(arr[i])->SetData(i);
+		(arr[j])->SetData(j);
+	}
     void resize() {
         if (!arr) return;
         max_size *= FACTOR;
@@ -62,16 +62,13 @@ class Heap{
             siftUp(parent);
         }
     }
-    void decKey(int i, Wrapper<int> val) {
+    void decKey(int i, int val) {
         if (!arr) return;
-        if (*arr[i] > val) {
-            arr[i] = &val;
-            siftUp(i);
-        }
+        siftUp(i);
     }
 public:
     Heap(Wrapper<int>** input_arr, int size) {
-        arr = new Wrapper<int>*[size];
+        arr = new Wrapper<int>*[size * FACTOR];
         this->size = size;
         max_size = size * FACTOR;
         for (int i = 0; i < size; i++) {
@@ -86,6 +83,7 @@ public:
     }
     void DelMin() {
         if (size == 0) return;
+		delete arr[0];
         arr[0] = arr[size-1];
         size--;
         siftDown(0);
@@ -100,10 +98,15 @@ public:
     }
     void DelKey(int i) {
         Wrapper<int> min = GetMin();
-        decKey(i, min);
+        decKey(i, min.GetKey()-1);
         DelMin();
     }
     ~Heap() {
+		for (int i = 0; i < size; i++)
+		{
+			if(arr[i])
+				delete arr[i];
+		}
         delete[] arr;
     }
 };

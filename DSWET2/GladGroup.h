@@ -16,6 +16,11 @@ public:
 	*/
 	GladGroup();
 
+	/* Description:   cto'r.
+	*  Input:         pointer, a pointer to the heap.
+	*/
+	GladGroup(Wrapper<int>* pointer);
+
 	/* Description:  Returns the pointer to the matching group in the heap.
 	   Input:		 None.
 	   Return Value: The pointer to the heap.
@@ -48,7 +53,7 @@ public:
 
 	/* Description:  Returns the sum of the top K gladiators' scores.
 	   Input:		 k, num of scores to sum.
-	   Return Value: The wanted sum.
+	   Return Value: The wanted sum, if k is bigger than the number of glads returns -1;.
 	*/
 	int GetSumTopK(int k);
 

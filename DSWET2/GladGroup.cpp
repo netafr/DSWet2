@@ -7,6 +7,14 @@ GladGroup::GladGroup(): lost(false), heapPointer() {
 	}
 }
 
+GladGroup::GladGroup(Wrapper<int>* pointer) :lost(false), heapPointer(pointer)
+{
+	for (int i = 0; i < MAX_SCORE + 1; i++)
+	{
+		scoreHist[i] = 0;
+	}
+}
+
 Wrapper<int>*GladGroup::GetPointer() const {
 	return heapPointer;
 }
@@ -38,6 +46,9 @@ int GladGroup::GetSumTopK(int k) {
 		}
 		remain -= scoreHist[i];
 		score += scoreHist[i] * i;
+	}
+	if (remain != 0) {
+		return -1;
 	}
 	return score;
 }

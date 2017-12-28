@@ -72,17 +72,18 @@ public:
 	* Input:         toFind, reference to T data.
 					 key, the key of the T;
 	* Output:        None.
-	* Return Values: Whether or not the given T with the given key exists in the table.
+	* Return Values: Pointer to the node if exists, otherwise NULL.
 	*/
-	bool Member(const T& toFind ,int key) {
+	T* Member(const T& toFind ,int key) {
 		int hash = key % maxSize;
 		if (table[hash] == NULL) {
-			return false;
+			return NULL;
 		}
-		if (!table[hash]->Find(Wrapper<T>(toFind,key))) {
-			return false;
+		Wrapper<T>* member = table[hash]->GetData(Wrapper<T>(toFind, key));
+		if (!member) {
+			return NULL;
 		}
-		return true;
+		return &(member->GetData());
 	}
 
 	/* Description:  Inserts new element with the given data and key.

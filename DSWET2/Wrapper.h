@@ -11,14 +11,18 @@ public:
 
 	Wrapper(const T& data, int key) : data(data), key(key) {}
 
-	Wrapper(const Wrapper& wrap) : data(wrap.GetData()), key(wrap.GetKey()) {}
+	Wrapper(const Wrapper& wrap) : data(wrap.data), key(wrap.key) {}
 
-	const T& GetData() const {
+	T& GetData() {
 		return this->data;
 	}
 
-	int GetKey() const {
+	int GetKey() {
 		return this->key;
+	}
+
+	void SetData(int data) {
+		this->data = data;
 	}
 
 	void SetKey(int key) {
@@ -26,15 +30,15 @@ public:
 	}
 
 	bool operator==(const Wrapper& wrap) const {
-		return (key == wrap.GetKey());
+		return (key == wrap.key);
 	}
 
 	bool operator<(const Wrapper& wrap) const {
-		return (key < wrap.GetKey());
+		return (key < wrap.key);
 	}
 
 	bool operator>(const Wrapper& wrap) const {
-		return (key > wrap.GetKey());
+		return (key > wrap.key);
 	}
 
 	~Wrapper() {}

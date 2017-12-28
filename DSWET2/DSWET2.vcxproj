@@ -150,16 +150,17 @@
     <ClInclude Include="Colosseum.h" />
     <ClInclude Include="GladGroup.h" />
     <ClInclude Include="HashTable.h" />
+    <ClInclude Include="Heap.h" />
     <ClInclude Include="library2.h" />
     <ClInclude Include="Splay.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="Utils.h" />
     <ClInclude Include="Wrapper.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Colosseum.cpp" />
     <ClCompile Include="GladGroup.cpp" />
-    <ClCompile Include="HashTest.cpp" />
+    <ClCompile Include="library2.cpp" />
+    <ClCompile Include="main2.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
