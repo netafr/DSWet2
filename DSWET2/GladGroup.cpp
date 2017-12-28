@@ -23,9 +23,13 @@ void GladGroup::SetLost() {
 	this->lost = true;
 }
 
+void GladGroup::AddToHist(int score) {
+	scoreHist[score]++;
+}
+
 int GladGroup::GetSumTopK(int k) {
 	int remain = k, score = 0;
-	for (int i = MAX_SCORE; i >= 0 && remain >= 0; --i)
+	for (int i = MAX_SCORE; i >= 0 && remain > 0; --i)
 	{
 		if (scoreHist[i] > remain) {
 			remain = 0;

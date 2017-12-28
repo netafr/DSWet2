@@ -40,6 +40,12 @@ public:
 	*/
 	void SetLost();
 
+	/* Description:  Adds a glad's score to the hist.
+	   Input:	     score, the glad's score.
+	   Return Value: None.
+	*/
+	void AddToHist(int score);
+
 	/* Description:  Returns the sum of the top K gladiators' scores.
 	   Input:		 k, num of scores to sum.
 	   Return Value: The wanted sum.

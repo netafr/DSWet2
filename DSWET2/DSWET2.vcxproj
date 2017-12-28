@@ -147,6 +147,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Colosseum.h" />
     <ClInclude Include="GladGroup.h" />
     <ClInclude Include="HashTable.h" />
     <ClInclude Include="library2.h" />
@@ -156,6 +157,7 @@
     <ClInclude Include="Wrapper.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Colosseum.cpp" />
     <ClCompile Include="GladGroup.cpp" />
     <ClCompile Include="HashTest.cpp" />
   </ItemGroup>
