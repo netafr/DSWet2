@@ -4,7 +4,7 @@
 #include "Splay.h"
 #include "Wrapper.h"
 
-const int FACTOR = 2;
+#define FACTOR 2
 
 
 template <class T>
@@ -28,7 +28,7 @@ class HashTableN
 	int currSize;
 	SplayTree< Wrapper<T> >** table; //Array of pointers to trees
 
-	 /* Description: Resizes (makes it bigger) the table size.
+	/* Description: Resizes (makes it bigger) the table size.
 	 * Input: None
 	 */
 	void Resize() {
@@ -45,7 +45,6 @@ class HashTableN
 			if (oldTable[j]) {
 				InsertToNew<T> insertToNew(this);
 				oldTable[j]->GenericInorder(insertToNew); //Go over the tree and insert the old values into the new table
-				//delete tree;
 			}
 		}
 		for (int k = 0; k < currSize; ++k)
