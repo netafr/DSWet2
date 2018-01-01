@@ -64,6 +64,7 @@ class Heap{
     }
     void decKey(int i, int val) {
         if (!arr) return;
+		arr[i]->SetKey(val);
         siftUp(i);
     }
 public:
