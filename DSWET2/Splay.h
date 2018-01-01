@@ -13,15 +13,19 @@ public:
 	Node<T>* right;
 	Node<T>* parent;
 	T data;
+	int numNodes;
+	int score;
+	int sum;
+
 	/* Description:   Empty Cto'r.
 	* Input:         None. 
 	*/
-	Node<T>():data(){}
+	Node<T>():data(), numNodes(1), score(), sum(){}
 
 	/* Description:   Cto'r.
 	* Input:         data - reference to generic data.
 	*/
-	Node<T>(const T& data) : data(data) {
+	Node<T>(const T& data, const int score) : data(data), numNodes(1), score(score), sum(score){
 		left = NULL;
 		right = NULL;
 		parent = NULL;
@@ -39,6 +43,25 @@ public:
 template <class T>
 class SplayTree {
 	Node<T>* root;
+
+	void UpdateNumNodes(Node<T>* x) {
+		if (!x) return;
+		int num_left = x->left ? x->left->numNodes : 0;
+		int num_right = x->right ? x->right->numNodes : 0;
+		x->numNodes = 1 + num_left + num_right;
+	}
+
+	void UpdateSum(Node<T>* x) {
+		if (!x) return;
+		x->sum = x->score;
+		if (x->left) x->sum += x->left->sum;
+		if (x->right) x->sum += x->right->sum;
+	}
+
+	void UpdateNode(Node<T>* x) {
+		UpdateNumNodes(x);
+		UpdateSum(x);
+	}
 
 	/* Description:   Performs "Zig" on the given Node.
 	* Input:         x, pointer to node in the tree.
@@ -61,6 +84,8 @@ class SplayTree {
 			}
 		}
 		y->parent = x;
+		UpdateNode(y);
+		UpdateNode(x);
 	}
 
 	/* Description:   Performs "Zag" on the given Node.
@@ -84,6 +109,8 @@ class SplayTree {
 			}
 		}
 		y->parent = x;
+		UpdateNode(y);
+		UpdateNode(x);
 	}
 
 	/* Description:   Splays the tree, fixes it using Zigs and Zags.
@@ -209,11 +236,27 @@ class SplayTree {
 		if (!toCopy) {
 			return NULL;
 		}
-		Node<T>* root = new Node<T>(toCopy->data);
+		Node<T>* root = new Node<T>(toCopy->data, toCopy->score);
+		root->numNodes = toCopy->numNodes;
+		root->sum = toCopy->sum;
 		root->parent = parent;
 		root->left = RecCopy(toCopy->left, root);
 		root->right = RecCopy(toCopy->right, root);
 		return root;
+	}
+
+	int SumFromK(Node<T>* x, int k) {
+		int num_left = x->left ? x->left->numNodes : 0;
+		if (num_left == k - 1) {
+			return x->score;
+		}
+		if (num_left > k - 1) {
+			if (x->right)
+				return SumFromK(x->left, k) + x->score + x->right->sum;
+			else
+				return SumFromK(x->left, k) + x->score;
+		}
+		return SumFromK(x->right, k - num_left - 1);
 	}
 
 public:
@@ -246,13 +289,13 @@ public:
 	* Output:        None.
 	* Return Values: Bool, if the insertion was successful.
 	*/
-	bool Insert(const T& newData) {
+	bool Insert(const T& newData, int score) {
 		Node<T>* temp = Find(newData);
 		if(temp) {
 			return false;
 		}
 		try {
-			Node<T>* x = new Node<T>(newData);
+			Node<T>* x = new Node<T>(newData, score);
 			if (!root) { //If the tree is empty.
 				root = x;
 				return true;
@@ -260,6 +303,8 @@ public:
 			Node<T>* tempRoot = root;
 			while (true) //Inserts node and keeps tree as BST.
 			{
+				tempRoot->numNodes++;
+				tempRoot->sum += score;
 				if (x->data < tempRoot->data) { //If is on left-subtree
 					if (!tempRoot->left) { //If no left son
 						tempRoot->left = x;
@@ -353,6 +398,7 @@ public:
 		toDelete->right = NULL;
 		toDelete->left = NULL;
 		delete(toDelete);
+		UpdateNode(root);
 		return true;
 	}
 
@@ -421,6 +467,13 @@ public:
 	*/
 	int GetSize() {
 		return GetSize(root);
+	}
+
+	int SumFromK(int k) {
+		if (!root || k > root->numNodes) {
+			return -1;
+		}
+		return SumFromK(root, root->numNodes - k + 1);
 	}
 
 	/* Description:  Dto'r.

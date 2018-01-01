@@ -1,14 +1,13 @@
 #ifndef _GROUP_
 #define _GROUP_
 
-#define MAX_SCORE 100
-
+#include "Splay.h"
 #include "Wrapper.h"
 class GladGroup
 {
 	bool lost;
 	Wrapper<int>* heapPointer;
-	int scoreHist[MAX_SCORE + 1];
+	SplayTree<int>* gladsTree;
 
 public:
 	/* Description:  Empty cto'r.
@@ -20,6 +19,8 @@ public:
 	*  Input:         pointer, a pointer to the heap.
 	*/
 	GladGroup(Wrapper<int>* pointer);
+
+	GladGroup(const GladGroup& other);
 
 	/* Description:  Returns the pointer to the matching group in the heap.
 	   Input:		 None.
@@ -45,11 +46,7 @@ public:
 	*/
 	void SetLost();
 
-	/* Description:  Adds a glad's score to the hist.
-	   Input:	     score, the glad's score.
-	   Return Value: None.
-	*/
-	void AddToHist(int score);
+	void InsertToTree(int gladId, int score);
 
 	/* Description:  Returns the sum of the top K gladiators' scores.
 	   Input:		 k, num of scores to sum.

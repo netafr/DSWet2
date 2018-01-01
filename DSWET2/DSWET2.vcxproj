@@ -152,6 +152,7 @@
     <ClInclude Include="HashTable.h" />
     <ClInclude Include="Heap.h" />
     <ClInclude Include="library2.h" />
+    <ClInclude Include="List.h" />
     <ClInclude Include="Splay.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Wrapper.h" />

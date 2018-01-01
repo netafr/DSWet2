@@ -1,7 +1,7 @@
 #ifndef _HASH_
 #define _HASH_
 
-#include "Splay.h"
+#include "List.h"
 #include "Wrapper.h"
 
 #define FACTOR 2
@@ -12,7 +12,7 @@ class HashTableN;
 
 template <class T>
 class InsertToNew {
-	HashTableN<T>* insertTo; //Pointer to Array of pointers to trees
+	HashTableN<T>* insertTo; //Pointer to Array of pointers to lists
 	public:
 		InsertToNew(HashTableN<T>* insertTo): insertTo(insertTo) {}
 		void operator() (Wrapper<T>& treeNode) {
@@ -26,15 +26,15 @@ class HashTableN
 {
 	int maxSize;
 	int currSize;
-	SplayTree< Wrapper<T> >** table; //Array of pointers to trees
+	List< Wrapper<T> >** table; //Array of pointers to lists
 
 	/* Description: Resizes (makes it bigger) the table size.
 	 * Input: None
 	 */
 	void Resize() {
 		maxSize *= FACTOR;
-		SplayTree< Wrapper<T> >** oldTable = table; //Save old for copying
-		table = new SplayTree< Wrapper<T> >*[maxSize]; //Allocate new bigger array
+		List< Wrapper<T> >** oldTable = table; //Save old for copying
+		table = new List< Wrapper<T> >*[maxSize]; //Allocate new bigger array
 		for (int i = 0; i < maxSize; ++i)
 		{
 			table[i] = NULL; //Zero it out
@@ -44,7 +44,7 @@ class HashTableN
 		for (int j = 0; j < oldSize; ++j) { //Copy existing data
 			if (oldTable[j]) {
 				InsertToNew<T> insertToNew(this);
-				oldTable[j]->GenericInorder(insertToNew); //Go over the tree and insert the old values into the new table
+				oldTable[j]->GenericIteration(insertToNew); //Go over the tree and insert the old values into the new table
 			}
 		}
 		for (int k = 0; k < currSize; ++k)
@@ -61,7 +61,7 @@ public:
 	* Input:         n, initial size.
 	*/
 	HashTableN(int n): maxSize(n), currSize() {
-		table = new SplayTree< Wrapper<T> >*[maxSize];
+		table = new List< Wrapper<T> >*[maxSize];
 		for (int i = 0; i < maxSize; ++i)
 		{
 			table[i] = NULL;
@@ -98,7 +98,7 @@ public:
 		}
 		int hash = key % maxSize;
 		if (table[hash] == NULL) {
-			table[hash] = new SplayTree< Wrapper<T> >();
+			table[hash] = new List< Wrapper<T> >();
 			table[hash]->Insert(Wrapper<T>(toInsert, key));
 		}
 		else {

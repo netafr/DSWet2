@@ -12,6 +12,7 @@ class Heap{
     Wrapper<int>** arr;
     int size;
     int max_size;
+
 	void swap(int i, int j) {
 		if (i < 0 || i >= size || j < 0 || j >= size) return;
 		Wrapper<int>* temp = arr[i];
@@ -24,6 +25,9 @@ class Heap{
         if (!arr) return;
         max_size *= FACTOR;
         Wrapper<int>** new_arr = new Wrapper<int>*[max_size];
+		for (int j = 0; j < max_size; ++j) {
+			new_arr[j] = NULL;
+		}
         for (int i = 0; i < size; i++)
             new_arr[i] = arr[i];
         delete[] arr;
@@ -33,6 +37,9 @@ class Heap{
         if (!arr) return;
         max_size /= FACTOR;
         Wrapper<int>** new_arr = new Wrapper<int>*[max_size];
+		for (int j = 0; j < max_size; ++j) {
+			new_arr[j] = NULL;
+		}
         for (int i = 0; i < size; i++)
             new_arr[i] = arr[i];
         delete[] arr;
@@ -84,8 +91,8 @@ public:
     }
     void DelMin() {
         if (size == 0) return;
-		delete arr[0];
-        arr[0] = arr[size-1];
+		swap(0, size - 1);
+		delete arr[size - 1];
         size--;
         siftDown(0);
         if (size <= max_size * SHRINK_FACTOR)

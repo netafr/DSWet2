@@ -40,16 +40,16 @@ StatusType Colosseum::addTrainingGroup(int trainingGroupId)
 
 StatusType Colosseum::addGladiator(int gladiatorId, int score, int trainingGroup)
 {
-	if (trainingGroup < 0 || gladiatorId < 0 || score < 0 || score > 100) {
+	if (trainingGroup < 0 || gladiatorId < 0 || score < 0) {
 		return INVALID_INPUT;
 	}
 	try {
 		if (gladsTree->Find(gladiatorId) || !groupsTable->Member(GladGroup(), trainingGroup)) {
 			return FAILURE;
 		}
-		gladsTree->Insert(gladiatorId);
+		gladsTree->Insert(gladiatorId, score);
 		GladGroup* group = groupsTable->Member(GladGroup(), trainingGroup);
-		group->AddToHist(score);
+		group->InsertToTree(gladiatorId, score);
 		return SUCCESS;
 	}
 	catch (std::bad_alloc& ba) {
