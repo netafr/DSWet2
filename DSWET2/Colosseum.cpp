@@ -14,6 +14,8 @@ Colosseum::Colosseum(int n, int* trainingGroupsIds) : gladsTree(), groupsTable()
 	activeGroups = new Heap(wrapArr ,n);
 	for (int j = 0; j < n; ++j)
 	{
+        //Each group has a pointer to the relevant group in heap, so we can
+        //receive the key and remove it
 		groupsTable->Insert(GladGroup(wrapArr[j]), trainingGroupsIds[j]);
 	}
 	delete[] wrapArr;
@@ -44,6 +46,7 @@ StatusType Colosseum::addGladiator(int gladiatorId, int score, int trainingGroup
 		return INVALID_INPUT;
 	}
 	try {
+        //If gladiator already exists or the wanted group doesnt exist - Failure
 		if (gladsTree->Find(gladiatorId) || !groupsTable->Member(GladGroup(), trainingGroup)) {
 			return FAILURE;
 		}
@@ -62,6 +65,7 @@ StatusType Colosseum::trainingGroupFight(int trainingGroup1, int trainingGroup2,
 	if (k1 <= 0 || k2 <= 0 || trainingGroup1 < 0 || trainingGroup2 < 0) {
 		return INVALID_INPUT;
 	}
+    //If same id or one of the groups doesnt exist - Failure
 	if (trainingGroup1 == trainingGroup2 || !groupsTable->Member(GladGroup(), trainingGroup1) || !groupsTable->Member(GladGroup(), trainingGroup2)) {
 		return FAILURE;
 	}
@@ -69,6 +73,7 @@ StatusType Colosseum::trainingGroupFight(int trainingGroup1, int trainingGroup2,
 	GladGroup* group2 = groupsTable->Member(GladGroup(), trainingGroup2);
 	int sum1 = group1->GetSumTopK(k1);
 	int sum2 = group2->GetSumTopK(k2);
+    //If k > size of any group or either one of groups already lost
 	if (sum1 == -1 || sum2 == -1 || group1->GetLost() || group2->GetLost()) {
 		return FAILURE;
 	}
@@ -88,6 +93,7 @@ StatusType Colosseum::trainingGroupFight(int trainingGroup1, int trainingGroup2,
 		losingGroup = group1;
 	}
 	losingGroup->SetLost();
+    //Deletes the losing group from min-heap, first taking its index from the pointer
 	activeGroups->DelKey(losingGroup->GetPointer()->GetData());
 	return SUCCESS;
 }

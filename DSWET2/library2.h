@@ -13,20 +13,19 @@
 
 #ifndef _234218_WET2_
 #define _234218_WET2_
-#include "Colosseum.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-
 	/* Return Values
 	* ----------------------------------- */
-	/*typedef enum {
+	typedef enum {
 		SUCCESS = 0,
 		FAILURE = -1,
 		ALLOCATION_ERROR = -2,
 		INVALID_INPUT = -3
-	} StatusType;*/
+	} StatusType;
 
 	/* Required Interface for the Data Structure
 	* -----------------------------------------*/

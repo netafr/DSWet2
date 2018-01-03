@@ -5,14 +5,7 @@
 #include "GladGroup.h"
 #include "HashTable.h"
 #include "Heap.h"
-
-typedef enum {
-	SUCCESS = 0,
-	FAILURE = -1,
-	ALLOCATION_ERROR = -2,
-	INVALID_INPUT = -3
-} StatusType;
-
+#include "library2.h"
 class Colosseum
 {
 	SplayTree<int>* gladsTree;

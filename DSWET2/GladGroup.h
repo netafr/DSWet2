@@ -3,11 +3,12 @@
 
 #include "Splay.h"
 #include "Wrapper.h"
+#include "Gladiator.h"
 class GladGroup
 {
 	bool lost;
 	Wrapper<int>* heapPointer;
-	SplayTree<int>* gladsTree;
+	SplayTree<Gladiator>* gladsTree;
 
 public:
 	/* Description:  Empty cto'r.

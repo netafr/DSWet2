@@ -14,7 +14,6 @@
 /* command line.                                                           */
 /***************************************************************************/
 
-#pragma warning(disable : 4996)
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>

@@ -13,7 +13,7 @@ public:
 	Node<T>* right;
 	Node<T>* parent;
 	T data;
-	int numNodes;
+	int numNodes; //Num of nodes in node's sub tree (including itself)
 	int score;
 	int sum;
 
@@ -43,21 +43,33 @@ public:
 template <class T>
 class SplayTree {
 	Node<T>* root;
-
+	/* Description:  Updates numNodes field of given node by his sons.
+	* Input:         x, pointer to node in the tree.
+	* Output:        None.
+	* Return Values: None.
+	*/
 	void UpdateNumNodes(Node<T>* x) {
 		if (!x) return;
 		int num_left = x->left ? x->left->numNodes : 0;
 		int num_right = x->right ? x->right->numNodes : 0;
 		x->numNodes = 1 + num_left + num_right;
 	}
-
+	/* Description:  Updates sum field of given node by his sons.
+	* Input:         x, pointer to node in the tree.
+	* Output:        None.
+	* Return Values: None.
+	*/
 	void UpdateSum(Node<T>* x) {
 		if (!x) return;
 		x->sum = x->score;
 		if (x->left) x->sum += x->left->sum;
 		if (x->right) x->sum += x->right->sum;
 	}
-
+	/* Description:  Updates additional data of given node by his sons.
+	* Input:         x, pointer to node in the tree.
+	* Output:        None.
+	* Return Values: None.
+	*/
 	void UpdateNode(Node<T>* x) {
 		UpdateNumNodes(x);
 		UpdateSum(x);
@@ -84,7 +96,7 @@ class SplayTree {
 			}
 		}
 		y->parent = x;
-		UpdateNode(y);
+		UpdateNode(y); //Updates additional data after fixes
 		UpdateNode(x);
 	}
 
@@ -109,7 +121,7 @@ class SplayTree {
 			}
 		}
 		y->parent = x;
-		UpdateNode(y);
+		UpdateNode(y); //Updates additional data after fixes
 		UpdateNode(x);
 	}
 
@@ -244,11 +256,20 @@ class SplayTree {
 		root->right = RecCopy(toCopy->right, root);
 		return root;
 	}
-
+	/* Description:  Sums the scores of all nodes with index bigger or equal to k
+	* Input:         x - pointer to root of current sub tree
+					 k, index to start the sum from
+	* Output:        None.
+	* Return Values: Returns the sum of scores of nodes with index bigger or equal to k
+	*/
 	int SumFromK(Node<T>* x, int k) {
+		//Same algorithm as find rank k, when turning left will sum up right sub-tree
 		int num_left = x->left ? x->left->numNodes : 0;
 		if (num_left == k - 1) {
-			return x->score;
+			if (x->right)
+				return x->score + x->right->sum;
+			else
+				return x->score;
 		}
 		if (num_left > k - 1) {
 			if (x->right)
@@ -303,6 +324,7 @@ public:
 			Node<T>* tempRoot = root;
 			while (true) //Inserts node and keeps tree as BST.
 			{
+				//Updates additional data in the insertion path
 				tempRoot->numNodes++;
 				tempRoot->sum += score;
 				if (x->data < tempRoot->data) { //If is on left-subtree
@@ -468,8 +490,13 @@ public:
 	int GetSize() {
 		return GetSize(root);
 	}
-
-	int SumFromK(int k) {
+	/* Description:  Returns the sum of top k nodes. if k is bigger than size of
+	 				 tree or the tree is empty, will return -1.
+	* Input:         k - integer representing how many nodes to sum from top
+	* Output:        None.
+	* Return Values: Sum of best k nodes
+	*/
+	int SumTopK(int k) {
 		if (!root || k > root->numNodes) {
 			return -1;
 		}
