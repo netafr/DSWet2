@@ -149,6 +149,7 @@
   <ItemGroup>
     <ClInclude Include="Colosseum.h" />
     <ClInclude Include="GladGroup.h" />
+    <ClInclude Include="Gladiator.h" />
     <ClInclude Include="HashTable.h" />
     <ClInclude Include="Heap.h" />
     <ClInclude Include="library2.h" />
