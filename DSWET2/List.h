@@ -55,7 +55,6 @@ public:
   * Return Values: None.
   */
     void Insert(const T& data) {
-        if (GetData(data)) return;
         ListNode<T>* new_node = new ListNode<T>(data);
         new_node->setNext(head); //Updates the head.
         head = new_node;
